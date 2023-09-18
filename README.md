@@ -1,6 +1,4 @@
-# go-backend-boilerplate
-
-Go backend api standard template
+# go-ekocar-backend
 
 # Installation
 ## Clone Package from Git
