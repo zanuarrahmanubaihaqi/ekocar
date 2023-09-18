@@ -1,8 +1,8 @@
 package context
 
 import (
-	"eko-car/domain/logistik/constant"
 	"context"
+	"eko-car/domain/user/constant"
 	"time"
 
 	"github.com/gofiber/fiber/v2"
