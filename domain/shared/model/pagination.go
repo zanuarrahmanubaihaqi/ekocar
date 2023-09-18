@@ -12,4 +12,5 @@ type QueryRequest struct {
 	Limit  int    `query:"limit"`
 	SortBy string `query:"sort_by"`
 	Search string `query:"search"`
+	Name   string `query:"name"`
 }

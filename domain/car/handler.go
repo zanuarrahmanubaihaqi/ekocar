@@ -1,13 +1,13 @@
 package car
 
 import (
-	"eko-car/domain/car/constant"
-	"eko-car/domain/car/feature"
-	"eko-car/domain/car/model"
 	"eko-car/domain/shared/context"
 	Error "eko-car/domain/shared/error"
 	shared_model "eko-car/domain/shared/model"
 	"eko-car/domain/shared/response"
+	"eko-car/domain/car/constant"
+	"eko-car/domain/car/feature"
+	"eko-car/domain/car/model"
 	"fmt"
 	"strconv"
 	"strings"
@@ -21,7 +21,6 @@ type CarHandler interface {
 	GetCarListsHandler(c *fiber.Ctx) error
 	UpdateCarHandler(c *fiber.Ctx) error
 	DeleteCarHandler(c *fiber.Ctx) error
-	BulkCounterHandler(c *fiber.Ctx) error
 	GetCarListsWithFilterHandler(c *fiber.Ctx) error
 }
 
@@ -45,7 +44,7 @@ func (lh carHandler) AddCarHandler(c *fiber.Ctx) error {
 	if err := c.BodyParser(request); err != nil {
 		err = Error.New(constant.ErrInvalidRequest, constant.ErrInvalidRequest, err)
 		return response.ResponseErrorWithContext(ctx, err)
-	} else if request.Name == "" || request.SKU == "" || request.UOM == "" {
+	} else if request.Name == "" {
 		err = Error.New(constant.ErrInvalidRequest, constant.ErrInvalidRequest, err)
 		return response.ResponseErrorWithContext(ctx, err)
 	}
@@ -64,12 +63,13 @@ func (lh carHandler) GetCarHandler(c *fiber.Ctx) error {
 	defer cancel()
 	ctx = context.SetValueToContext(ctx, c)
 
-	id := c.Params("id")
-	if id == "" || id == "0" {
+	sid := c.Params("id")
+	if sid == "" || sid == "0" {
 		err := Error.New(constant.ErrInvalidRequest, constant.ErrInvalidRequest, fmt.Errorf(constant.ErrCarIdNil))
 		return response.ResponseErrorWithContext(ctx, err)
 	}
 
+	id, _ := strconv.Atoi(sid)
 	results, err := lh.feature.GetCarFeature(ctx, id)
 	if err != nil {
 		return response.ResponseErrorWithContext(ctx, err)
@@ -118,12 +118,13 @@ func (lh carHandler) DeleteCarHandler(c *fiber.Ctx) error {
 	defer cancel()
 	ctx = context.SetValueToContext(ctx, c)
 
-	id := c.Params("id")
-	if id == "" || id == "0" {
+	sid := c.Params("id")
+	if sid == "" || sid == "0" {
 		err := Error.New(constant.ErrInvalidRequest, constant.ErrInvalidRequest, fmt.Errorf(constant.ErrCarIdNil))
 		return response.ResponseErrorWithContext(ctx, err)
 	}
 
+	id, _ := strconv.Atoi(sid)
 	results, err := lh.feature.DeleteCarFeature(ctx, id)
 	if err != nil {
 		return response.ResponseErrorWithContext(ctx, err)
@@ -138,8 +139,8 @@ func (lh carHandler) UpdateCarHandler(c *fiber.Ctx) error {
 	defer cancel()
 	ctx = context.SetValueToContext(ctx, c)
 
-	id := c.Params("id")
-	if id == "" || id == "0" {
+	sid := c.Params("id")
+	if sid == "" || sid == "0" {
 		err := Error.New(constant.ErrInvalidRequest, constant.ErrInvalidRequest, fmt.Errorf(constant.ErrCarIdNil))
 		return response.ResponseErrorWithContext(ctx, err)
 	}
@@ -150,25 +151,13 @@ func (lh carHandler) UpdateCarHandler(c *fiber.Ctx) error {
 		return response.ResponseErrorWithContext(ctx, err)
 	}
 
+	id, _ := strconv.Atoi(sid)
 	results, err := lh.feature.UpdateCarFeature(ctx, id, request)
 	if err != nil {
 		return response.ResponseErrorWithContext(ctx, err)
 	}
 
 	return response.ResponseOK(c, constant.MsgUpdateCarSuccess, results)
-}
-
-func (lh carHandler) BulkCounterHandler(c *fiber.Ctx) error {
-
-	ctx := context.CreateContext()
-	ctx = context.SetValueToContext(ctx, c)
-
-	err := lh.feature.BulkCounterFeature(ctx)
-	if err != nil {
-		return response.ResponseErrorWithContext(ctx, err)
-	}
-
-	return response.ResponseOK(c, constant.SUCCESS, "request being processed")
 }
 
 func (lh carHandler) GetCarListsWithFilterHandler(c *fiber.Ctx) error {

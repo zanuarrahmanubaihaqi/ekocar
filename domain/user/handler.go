@@ -1,13 +1,13 @@
 package user
 
 import (
-	"eko-car/domain/user/constant"
-	"eko-car/domain/user/feature"
-	"eko-car/domain/user/model"
 	"eko-car/domain/shared/context"
 	Error "eko-car/domain/shared/error"
 	shared_model "eko-car/domain/shared/model"
 	"eko-car/domain/shared/response"
+	"eko-car/domain/user/constant"
+	"eko-car/domain/user/feature"
+	"eko-car/domain/user/model"
 	"fmt"
 	"strconv"
 	"strings"
@@ -21,7 +21,6 @@ type UserHandler interface {
 	GetUserListsHandler(c *fiber.Ctx) error
 	UpdateUserHandler(c *fiber.Ctx) error
 	DeleteUserHandler(c *fiber.Ctx) error
-	BulkCounterHandler(c *fiber.Ctx) error
 	GetUserListsWithFilterHandler(c *fiber.Ctx) error
 }
 
@@ -45,7 +44,7 @@ func (lh userHandler) AddUserHandler(c *fiber.Ctx) error {
 	if err := c.BodyParser(request); err != nil {
 		err = Error.New(constant.ErrInvalidRequest, constant.ErrInvalidRequest, err)
 		return response.ResponseErrorWithContext(ctx, err)
-	} else if request.Name == "" || request.SKU == "" || request.UOM == "" {
+	} else if request.Name == "" {
 		err = Error.New(constant.ErrInvalidRequest, constant.ErrInvalidRequest, err)
 		return response.ResponseErrorWithContext(ctx, err)
 	}
@@ -64,12 +63,13 @@ func (lh userHandler) GetUserHandler(c *fiber.Ctx) error {
 	defer cancel()
 	ctx = context.SetValueToContext(ctx, c)
 
-	id := c.Params("id")
-	if id == "" || id == "0" {
+	sid := c.Params("id")
+	if sid == "" || sid == "0" {
 		err := Error.New(constant.ErrInvalidRequest, constant.ErrInvalidRequest, fmt.Errorf(constant.ErrUserIdNil))
 		return response.ResponseErrorWithContext(ctx, err)
 	}
 
+	id, _ := strconv.Atoi(sid)
 	results, err := lh.feature.GetUserFeature(ctx, id)
 	if err != nil {
 		return response.ResponseErrorWithContext(ctx, err)
@@ -118,12 +118,13 @@ func (lh userHandler) DeleteUserHandler(c *fiber.Ctx) error {
 	defer cancel()
 	ctx = context.SetValueToContext(ctx, c)
 
-	id := c.Params("id")
-	if id == "" || id == "0" {
+	sid := c.Params("id")
+	if sid == "" || sid == "0" {
 		err := Error.New(constant.ErrInvalidRequest, constant.ErrInvalidRequest, fmt.Errorf(constant.ErrUserIdNil))
 		return response.ResponseErrorWithContext(ctx, err)
 	}
 
+	id, _ := strconv.Atoi(sid)
 	results, err := lh.feature.DeleteUserFeature(ctx, id)
 	if err != nil {
 		return response.ResponseErrorWithContext(ctx, err)
@@ -138,8 +139,8 @@ func (lh userHandler) UpdateUserHandler(c *fiber.Ctx) error {
 	defer cancel()
 	ctx = context.SetValueToContext(ctx, c)
 
-	id := c.Params("id")
-	if id == "" || id == "0" {
+	sid := c.Params("id")
+	if sid == "" || sid == "0" {
 		err := Error.New(constant.ErrInvalidRequest, constant.ErrInvalidRequest, fmt.Errorf(constant.ErrUserIdNil))
 		return response.ResponseErrorWithContext(ctx, err)
 	}
@@ -150,25 +151,13 @@ func (lh userHandler) UpdateUserHandler(c *fiber.Ctx) error {
 		return response.ResponseErrorWithContext(ctx, err)
 	}
 
+	id, _ := strconv.Atoi(sid)
 	results, err := lh.feature.UpdateUserFeature(ctx, id, request)
 	if err != nil {
 		return response.ResponseErrorWithContext(ctx, err)
 	}
 
 	return response.ResponseOK(c, constant.MsgUpdateUserSuccess, results)
-}
-
-func (lh userHandler) BulkCounterHandler(c *fiber.Ctx) error {
-
-	ctx := context.CreateContext()
-	ctx = context.SetValueToContext(ctx, c)
-
-	err := lh.feature.BulkCounterFeature(ctx)
-	if err != nil {
-		return response.ResponseErrorWithContext(ctx, err)
-	}
-
-	return response.ResponseOK(c, constant.SUCCESS, "request being processed")
 }
 
 func (lh userHandler) GetUserListsWithFilterHandler(c *fiber.Ctx) error {

@@ -39,4 +39,12 @@ func RouterGroupV1(app *fiber.App, handler handler) {
 		sales.Get("/health", handler.salesHandler.HealthCheck)
 	}
 
+	userFeature := v1.Group("/user")
+	{
+		userFeature.Post("/add", handler.userHandler.AddUserHandler)
+		userFeature.Put("/update/:id", handler.userHandler.UpdateUserHandler)
+		userFeature.Delete("/delete/:id", handler.userHandler.DeleteUserHandler)
+		userFeature.Get("/lists", handler.userHandler.GetUserListsHandler)
+	}
+
 }
