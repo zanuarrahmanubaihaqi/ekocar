@@ -25,7 +25,7 @@ func (lr userRepository) CheckUserIdRepository(ctx context.Context, id int) (exi
 
 	for rows.Next() {
 		var count int
-		err := rows.Scan(&count)
+		err = rows.Scan(&count)
 		if err != nil {
 			err = Error.New(constant.ErrDatabase, constant.ErrWhenScanResultDB, err)
 			break

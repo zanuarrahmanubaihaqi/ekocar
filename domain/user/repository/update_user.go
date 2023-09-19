@@ -40,7 +40,7 @@ func (lr userRepository) UpdateUserRepository(ctx context.Context, id int, updat
 		buildQuery = append(buildQuery, fmt.Sprintf("no_rekening = %s", update.NoRekening))
 	}
 	if update.Role != 0 {
-		buildQuery = append(buildQuery, fmt.Sprintf("role = %s", update.Role))
+		buildQuery = append(buildQuery, fmt.Sprintf("role = %d", update.Role))
 	}
 
 	updateQuery := strings.Join(buildQuery, ",")

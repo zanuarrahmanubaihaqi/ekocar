@@ -53,7 +53,7 @@ func (lr userRepository) GetUserByIdRepository(ctx context.Context, id int) (pro
 	}
 
 	for rows.Next() {
-		err := rows.StructScan(&product)
+		err = rows.StructScan(&product)
 		if err != nil {
 			err = Error.New(constant.ErrTimeout, constant.ErrWhenScanResultDB, err)
 			break
@@ -83,7 +83,7 @@ func (lr userRepository) GetTotalUserRepository(ctx context.Context) (count int,
 	}
 
 	for rows.Next() {
-		err := rows.Scan(&count)
+		err = rows.Scan(&count)
 		if err != nil {
 			err = Error.New(constant.ErrDatabase, constant.ErrWhenScanResultDB, err)
 			break
@@ -118,7 +118,7 @@ func (lr userRepository) GetTotalUserWithConditionsRepository(ctx context.Contex
 	}
 
 	for rows.Next() {
-		err := rows.Scan(&count)
+		err = rows.Scan(&count)
 		if err != nil {
 			err = Error.New(constant.ErrDatabase, constant.ErrWhenScanResultDB, err)
 			break
@@ -138,7 +138,7 @@ func (lr userRepository) GetTotalUserWithFiltersRepository(ctx context.Context, 
 		conditions = query.ConditionsBuilder(filter)
 	}
 
-	query := fmt.Sprintf("SELECT COUNT(*) FROM product WHERE deleted_at IS NULL")
+	query := fmt.Sprintf("SELECT COUNT(*) FROM product WHERE deleted_at IS NULL %s", "")
 	if len(filter.Filters) > 0 {
 		query = fmt.Sprintf("SELECT COUNT(*) FROM product WHERE deleted_at IS NULL AND %s", conditions)
 	}
@@ -160,7 +160,7 @@ func (lr userRepository) GetTotalUserWithFiltersRepository(ctx context.Context, 
 	}
 
 	for rows.Next() {
-		err := rows.Scan(&count)
+		err = rows.Scan(&count)
 		if err != nil {
 			err = Error.New(constant.ErrDatabase, constant.ErrWhenScanResultDB, err)
 			break

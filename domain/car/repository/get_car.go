@@ -50,7 +50,7 @@ func (lr carRepository) GetCarByIdRepository(ctx context.Context, id int) (produ
 	}
 
 	for rows.Next() {
-		err := rows.StructScan(&product)
+		err = rows.StructScan(&product)
 		if err != nil {
 			err = Error.New(constant.ErrTimeout, constant.ErrWhenScanResultDB, err)
 			break
@@ -80,7 +80,7 @@ func (lr carRepository) GetTotalCarRepository(ctx context.Context) (count int, e
 	}
 
 	for rows.Next() {
-		err := rows.Scan(&count)
+		err = rows.Scan(&count)
 		if err != nil {
 			err = Error.New(constant.ErrDatabase, constant.ErrWhenScanResultDB, err)
 			break
@@ -115,7 +115,7 @@ func (lr carRepository) GetTotalCarWithConditionsRepository(ctx context.Context,
 	}
 
 	for rows.Next() {
-		err := rows.Scan(&count)
+		err = rows.Scan(&count)
 		if err != nil {
 			err = Error.New(constant.ErrDatabase, constant.ErrWhenScanResultDB, err)
 			break
@@ -135,7 +135,7 @@ func (lr carRepository) GetTotalCarWithFiltersRepository(ctx context.Context, fi
 		conditions = query.ConditionsBuilder(filter)
 	}
 
-	query := fmt.Sprintf("SELECT COUNT(*) FROM product WHERE deleted_at IS NULL")
+	query := fmt.Sprintf("SELECT COUNT(*) FROM product WHERE deleted_at IS NULL %s", "")
 	if len(filter.Filters) > 0 {
 		query = fmt.Sprintf("SELECT COUNT(*) FROM product WHERE deleted_at IS NULL AND %s", conditions)
 	}
@@ -157,7 +157,7 @@ func (lr carRepository) GetTotalCarWithFiltersRepository(ctx context.Context, fi
 	}
 
 	for rows.Next() {
-		err := rows.Scan(&count)
+		err = rows.Scan(&count)
 		if err != nil {
 			err = Error.New(constant.ErrDatabase, constant.ErrWhenScanResultDB, err)
 			break
