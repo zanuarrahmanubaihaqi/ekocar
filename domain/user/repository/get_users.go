@@ -5,14 +5,14 @@ import (
 	"database/sql"
 	"eko-car/domain/shared/constant"
 	Error "eko-car/domain/shared/error"
-	shared_model "eko-car/domain/shared/model"
+	sharedModel "eko-car/domain/shared/model"
 	"eko-car/domain/shared/query"
 	"eko-car/domain/user/model"
 	"eko-car/infrastructure/logger"
 	"fmt"
 )
 
-func (lr userRepository) GetUserListsRepository(ctx context.Context, limit, offset int, sortby, search string, queryRequest shared_model.QueryRequest) (products []model.User, err error) {
+func (lr userRepository) GetUserListsRepository(ctx context.Context, limit, offset int, sortby, search string, queryRequest sharedModel.QueryRequest) (products []model.User, err error) {
 
 	if sortby == "" {
 		sortby = "id asc"
@@ -43,9 +43,9 @@ func (lr userRepository) GetUserListsRepository(ctx context.Context, limit, offs
 			no_rekening,
 			role
 		FROM 
-		user 
-			WHERE 
-		deleted_at %s IS NULL %s  ORDER BY %s LIMIT ? OFFSET ?`, squery, search, sortby)
+			user 
+		WHERE 
+			deleted_at %s IS NULL %s  ORDER BY %s LIMIT ? OFFSET ?`, squery, search, sortby)
 	logger.LogInfo(constant.QUERY, query)
 
 	err = lr.Database.DB.SelectContext(ctx, &products, query, limit, offset)
@@ -65,7 +65,7 @@ func (lr userRepository) GetUserListsRepository(ctx context.Context, limit, offs
 	return
 }
 
-func (lr userRepository) GetUserListsWithFiltersRepository(ctx context.Context, filter *shared_model.Filter, offset int) (products []model.User, err error) {
+func (lr userRepository) GetUserListsWithFiltersRepository(ctx context.Context, filter *sharedModel.Filter, offset int) (products []model.User, err error) {
 
 	query, err := query.SelectStatementBuilder(model.User{}, "user", filter)
 	if err != nil {

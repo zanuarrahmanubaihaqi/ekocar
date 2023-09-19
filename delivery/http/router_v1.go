@@ -24,4 +24,12 @@ func RouterGroupV1(app *fiber.App, handler handler) {
 		userFeature.Get("/lists", handler.userHandler.GetUserListsHandler)
 	}
 
+	carFeature := v1.Group("/car")
+	{
+		carFeature.Post("/add", handler.carHandler.AddCarHandler)
+		carFeature.Put("/update/:id", handler.carHandler.UpdateCarHandler)
+		carFeature.Delete("/delete/:id", handler.carHandler.DeleteCarHandler)
+		carFeature.Get("/lists", handler.carHandler.GetCarListsHandler)
+	}
+
 }

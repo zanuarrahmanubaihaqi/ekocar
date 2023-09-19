@@ -9,7 +9,7 @@ import (
 func (lr userRepository) DeleteUserRepository(ctx context.Context, id int) (err error) {
 
 	tx := lr.Database.DB.MustBegin()
-	stmt, err := tx.PrepareContext(ctx, "UPDATE user SET deleted_at = now(), updated_at = now() WHERE id = ?")
+	stmt, err := tx.PrepareContext(ctx, "UPDATE user SET deleted_at = now() WHERE id = ?")
 	if err != nil {
 		if err == context.DeadlineExceeded {
 			err = Error.New(constant.ErrTimeout, constant.ErrWhenPrepareStatementDB, err)

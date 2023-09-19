@@ -1,13 +1,13 @@
 package car
 
 import (
+	"eko-car/domain/car/constant"
+	"eko-car/domain/car/feature"
+	"eko-car/domain/car/model"
 	"eko-car/domain/shared/context"
 	Error "eko-car/domain/shared/error"
 	shared_model "eko-car/domain/shared/model"
 	"eko-car/domain/shared/response"
-	"eko-car/domain/car/constant"
-	"eko-car/domain/car/feature"
-	"eko-car/domain/car/model"
 	"fmt"
 	"strconv"
 	"strings"
@@ -44,7 +44,7 @@ func (lh carHandler) AddCarHandler(c *fiber.Ctx) error {
 	if err := c.BodyParser(request); err != nil {
 		err = Error.New(constant.ErrInvalidRequest, constant.ErrInvalidRequest, err)
 		return response.ResponseErrorWithContext(ctx, err)
-	} else if request.Name == "" {
+	} else if request.Merk == "" {
 		err = Error.New(constant.ErrInvalidRequest, constant.ErrInvalidRequest, err)
 		return response.ResponseErrorWithContext(ctx, err)
 	}

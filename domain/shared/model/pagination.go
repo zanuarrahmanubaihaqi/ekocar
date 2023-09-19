@@ -13,4 +13,5 @@ type QueryRequest struct {
 	SortBy string `query:"sort_by"`
 	Search string `query:"search"`
 	Name   string `query:"name"`
+	Merk   string `query:"merk"`
 }
