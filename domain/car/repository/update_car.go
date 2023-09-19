@@ -22,7 +22,7 @@ func (lr carRepository) UpdateCarRepository(ctx context.Context, id int, update 
 		buildQuery = append(buildQuery, fmt.Sprintf("type = %s", update.Type))
 	}
 	if update.TahunPembuatan != "" {
-		buildQuery = append(buildQuery, fmt.Sprintf("tahun_pembuatan = %d", update.TahunPembuatan))
+		buildQuery = append(buildQuery, fmt.Sprintf("tahun_pembuatan = %s", update.TahunPembuatan))
 	}
 	if update.Image != "" {
 		buildQuery = append(buildQuery, fmt.Sprintf("image = %s", update.Image))
